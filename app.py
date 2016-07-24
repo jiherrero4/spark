@@ -22,7 +22,7 @@ app = Flask(__name__)
 def webhook():
     req = request.get_json(silent=True, force=True)
 
-    print("Request:")
+    print("PASO1: Request recibido de api.ai:")
 
     # Con indent lo que hacemos es introducir espacios en el formato de salida
     # de forma que se lea mejor, no simplemente un texto plano.
@@ -47,6 +47,8 @@ def processRequest(req):
     if req.get("result").get("action") != "creaSala":
         return {}
 
+    print("PASO 2 completado")
+
     myToken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
     roomTitle = "PruebaCreacionSala"
     headers = {"Authorization": "Bearer " + myToken, "Content-type": "application/json"}
@@ -54,6 +56,9 @@ def processRequest(req):
     roomInfo = {"title": roomTitle}
     # Execute HTTP POST request to create the Spark Room
     r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
+
+    print("PASO 3 completado")
+
     room = r.json()
     res = makeWebhookResult()
     return res
