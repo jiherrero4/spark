@@ -34,12 +34,12 @@ def webhook():
     res = json.dumps(res, indent=4)
     # print(res)
     # La respuesta tiene que ser tipo application/json
-    # La función make_response pertenece a la libreria de Flask
+    # La funcion make_response pertenece a la libreria de Flask
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
 
-# En esta función vamos a procesar el mensaje que hemos recibido, webhook (post).
+# En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la acción a realizar.
 #
 #
