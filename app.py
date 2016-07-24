@@ -40,7 +40,7 @@ def webhook():
     return r
 
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
-# Lo primero que vamos a buscar es la acción a realizar.
+# Lo primero que vamos a buscar es la accion a realizar.
 #
 #
 def processRequest(req):
