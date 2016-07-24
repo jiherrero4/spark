@@ -55,11 +55,11 @@ def processRequest(req):
     # Define the action to be taken in the HTTP request
     roomInfo = {"title": roomTitle}
     # Execute HTTP POST request to create the Spark Room
-    r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
+    #r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
 
     print("PASO 3 completado")
 
-    room = r.json()
+    #room = r.json()
     res = makeWebhookResult()
     return res
 
@@ -73,8 +73,6 @@ def makeWebhookResult():
     return {
         "speech": speech,
         "displayText": speech,
-        # "data": data,
-        # "contextOut": [],
         "source": "from spark"
     }
 
