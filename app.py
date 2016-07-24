@@ -49,17 +49,17 @@ def processRequest(req):
 
     print("PASO 2 completado")
 
-    myToken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
+    myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
     roomTitle = "PruebaCreacionSala"
     headers = {"Authorization": "Bearer " + myToken, "Content-type": "application/json"}
     # Define the action to be taken in the HTTP request
     roomInfo = {"title": roomTitle}
     # Execute HTTP POST request to create the Spark Room
-    #r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
+    r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
 
     print("PASO 3 completado")
 
-    #room = r.json()
+    room = r.json()
     res = makeWebhookResult()
     return res
 
