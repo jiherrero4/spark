@@ -12,12 +12,12 @@ from flask import make_response
 
 # Flask app should start in global layout
 # Flask es un web framework, de forma que podemos programar acciones determinadas basadas
-# en que tipo de mensaje web nos llega a nuestra aplicación
+# en que tipo de mensaje web nos llega a nuestra aplicacion
 #
 #
 app = Flask(__name__)
 
-# Ahora vamos a definir que hacer si nuestra aplicación recibe un webhook tipo POST
+# Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
