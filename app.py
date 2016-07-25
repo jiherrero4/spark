@@ -78,10 +78,12 @@ def creaGrupoSpark():
     print("funcion creaGrupoSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
-    emailFile = userList.txt  # first argument
+    emailFile = userList  # first argument
     roomTitle = "Ojete"  # second argument
     # Read the email file and save the emails in an list
     emails = [line.strip() for line in open(emailFile)]
+
+    print("funcion creaGrupoSpark, paso2")
 
     # Define header used for authentication
     headers = {"Authorization": "Bearer " + myToken,
