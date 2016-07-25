@@ -78,7 +78,7 @@ def creaGrupoSpark():
     print("funcion creaGrupoSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
-    emailFile = userList  # first argument
+    emailFile = userList.txt  # first argument
     roomTitle = "Ojete"  # second argument
     # Read the email file and save the emails in an list
     emails = [line.strip() for line in open(emailFile)]
