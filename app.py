@@ -45,10 +45,21 @@ def webhook():
 #
 def processRequest(req):
     if req.get("result").get("action") != "creaSala":
+        creaSalaSpark()
+
+    elif req.get("result").get("action") != "creaGrupo":
+        creaGrupoSpark()
+
+    else:
         return {}
 
-    print("PASO 2 completado")
+    res = makeWebhookResult()
+    return res
 
+
+def creaSalaSpark():
+
+    print("funcion creaSalaSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
     roomTitle = "PruebaCreacionSala"
     headers = {"Authorization": "Bearer " + myToken, "Content-type": "application/json"}
@@ -57,11 +68,46 @@ def processRequest(req):
     # Execute HTTP POST request to create the Spark Room
     r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
 
-    print("PASO 3 completado")
+    print("funcion creaSalaSpark completado")
 
     room = r.json()
-    res = makeWebhookResult()
-    return res
+
+
+def creaGrupoSpark():
+
+    print("funcion creaGrupoSpark iniciado")
+    myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
+
+    emailFile = userList.txt  # first argument
+    roomTitle = "Ojete"  # second argument
+    # Read the email file and save the emails in an list
+    emails = [line.strip() for line in open(emailFile)]
+
+    # Define header used for authentication
+    headers = {"Authorization": "Bearer " + myToken,
+               "Content-type": "application/json"}
+
+    # Define the action to be taken in the HTTP request
+    roomInfo = {"title": roomTitle}
+
+    # Execute HTTP POST request to create the Spark Room
+    r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
+    room = r.json()
+    # Print the result of the HTTP POST request
+    print(room)
+
+    for email in emails:
+        # if it's an blank line don't add:
+        if email == "": continue
+        # Set the HTTP request payload (action)
+        membershipInfo = {"roomId": room["id"],
+                          "personEmail": email}
+        # Execute HTTP POST request to create the Spark Room
+        r = requests.post("https://api.ciscospark.com/v1/memberships",
+                          headers=headers, json=membershipInfo)
+        membership = r.json()
+        print(membership)
+        print()
 
 def makeWebhookResult():
 
@@ -80,6 +126,6 @@ def makeWebhookResult():
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
 
-    print "Starting app on port %d" % port
+    print("Starting app on port %d" % port)
 
     app.run(debug=False, port=port, host='0.0.0.0')
