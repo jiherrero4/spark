@@ -84,7 +84,7 @@ def creaGrupoSpark():
     roomTitle = "Ojete"  # second argument
     # Read the email file and save the emails in an list
     #emails = [line.strip() for line in open(emailFile)]
-    emails = ["jiherrero@ttrends.es","jiherrero4@gmail.com"]
+    emails = ["jiherrero@ttrends.es","fsobrino@ttrends.es","pmartin@ttrends.es","jespejo@ttrends.es","jmvarelad@gmail.com"]
 
     print("funcion creaGrupoSpark, paso2")
 
@@ -116,7 +116,7 @@ def creaGrupoSpark():
 
 def makeWebhookResult():
 
-    speech = "Sala creada, y prueba superada"
+    speech = "Sala Ojete creada, y prueba superada"
 
     print("Response:")
     print(speech)
