@@ -17,6 +17,8 @@ from flask import make_response
 #
 app = Flask(__name__)
 
+
+
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -78,10 +80,11 @@ def creaGrupoSpark():
     print("funcion creaGrupoSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
-    emailFile = userlist.txt  # first argument
+    #emailFile = userlist.txt
     roomTitle = "Ojete"  # second argument
     # Read the email file and save the emails in an list
-    emails = [line.strip() for line in open(emailFile)]
+    #emails = [line.strip() for line in open(emailFile)]
+    emails = ["jiherrero@ttrends.es","jiherrero4@gmail.com"]
 
     print("funcion creaGrupoSpark, paso2")
 
