@@ -44,10 +44,10 @@ def webhook():
 #
 #
 def processRequest(req):
-    if req.get("result").get("action") != "creaSala":
+    if req.get("result").get("action") == "creaSala":
         creaSalaSpark()
 
-    elif req.get("result").get("action") != "creaGrupo":
+    elif req.get("result").get("action") == "creaGrupo":
         creaGrupoSpark()
 
     else:
