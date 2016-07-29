@@ -27,7 +27,7 @@ def webhook():
     print("PASO1: Request recibido de api.ai:")
 
     # Con indent lo que hacemos es introducir espacios en el formato de salida
-    # de forma que se lea mejor, no simplemente un texto plano.
+    # de forma que se lea mejor, no simplemente un texto plano..
     print(json.dumps(req, indent=4))
 
     res = processRequest(req)
