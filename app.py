@@ -116,7 +116,7 @@ def creaGrupoSpark():
 
 def makeWebhookResult():
 
-    speech = "Sala Ojete creada, y prueba superada"
+    speech = "Sala Ojete creada, y prueba superada..."
 
     print("Response:")
     print(speech)
