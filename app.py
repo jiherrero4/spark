@@ -132,6 +132,7 @@ def llamaSala():
     url = "https://pxdemo.ttrends.es/webapp/#/?conference=jiherrero@ttrends.es"
     webbrowser.open(url, new=new)
 
+# Lee informacion de un archivo excel
 def leeExcel():
 
     scope = ['https://spreadsheets.google.com/feeds']
