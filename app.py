@@ -5,6 +5,9 @@ import json
 import os
 import requests
 import sys
+import webbrowser
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 from flask import Flask
 from flask import request
@@ -51,6 +54,12 @@ def processRequest(req):
 
     elif req.get("result").get("action") == "creaGrupo":
         creaGrupoSpark()
+
+    elif req.get("result").get("action") == "llama":
+        llamaSala()
+
+    elif req.get("result").get("action") == "gestionado":
+        leeExcel()
 
     else:
         return {}
@@ -113,6 +122,37 @@ def creaGrupoSpark():
         membership = r.json()
         print(membership)
         print()
+
+def llamaSala():
+
+    new = 2  # open in a new tab, if possible
+
+    # open a public URL, in this case, the webbrowser docs
+    # url = "http://expansion.es"
+    url = "https://pxdemo.ttrends.es/webapp/#/?conference=jiherrero@ttrends.es"
+    webbrowser.open(url, new=new)
+
+def leeExcel():
+
+    scope = ['https://spreadsheets.google.com/feeds']
+
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('My Project-e08df21666bc.json', scope)
+
+    gc = gspread.authorize(credentials)
+
+    wks = gc.open("prueba1")
+
+    worksheet = wks.worksheet("gestionados")
+
+    cliente = worksheet.find("GESTAMP")
+    servicio = worksheet.find("S. Gestionado")
+
+    column = cliente.col
+    row = servicio.row
+
+    valorBuscado = worksheet.cell(row, column).value
+
+    print(valorBuscado)
 
 def makeWebhookResult():
 
