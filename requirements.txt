@@ -1,4 +1,5 @@
 Flask==0.10.1
 requests==2.10.0
 gspread==0.4.1
+oauth2client.service_account
 
