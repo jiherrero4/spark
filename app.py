@@ -59,12 +59,12 @@ def processRequest(req):
         llamaSala()
 
     elif req.get("result").get("action") == "gestionado":
-        leeExcel()
+        dato = leeExcel(req)
 
     else:
         return {}
 
-    res = makeWebhookResult()
+    res = makeWebhookResult(dato)
     return res
 
 
@@ -133,7 +133,11 @@ def llamaSala():
     webbrowser.open(url, new=new)
 
 # Lee informacion de un archivo excel
-def leeExcel():
+def leeExcel(req):
+
+    result = req.get("result")
+    parameters = result.get("parameters")
+    cliente = parameters.get("Clientes")
 
     scope = ['https://spreadsheets.google.com/feeds']
 
@@ -145,7 +149,7 @@ def leeExcel():
 
     worksheet = wks.worksheet("gestionados")
 
-    cliente = worksheet.find("GESTAMP")
+    #cliente = worksheet.find("GESTAMP")
     servicio = worksheet.find("S. Gestionado")
 
     column = cliente.col
@@ -153,11 +157,20 @@ def leeExcel():
 
     valorBuscado = worksheet.cell(row, column).value
 
+    return valorBuscado
+
     print(valorBuscado)
 
-def makeWebhookResult():
+def makeWebhookResult(data):
 
-    speech = "Sala Ojete creada, y prueba superada..."
+    if data is None:
+
+      speech = "valor no encotrado..."
+
+    else:
+
+      speech = data
+
 
     print("Response:")
     print(speech)
