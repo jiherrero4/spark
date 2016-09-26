@@ -62,12 +62,12 @@ def processRequest(req):
         llamaSala()
 
     elif req.get("result").get("action") == "gestionado":
-        leeExcel(req)
+        dato = leeExcel(req)
 
     else:
         return {}
 
-    res = makeWebhookResult()
+    res = makeWebhookResult(dato)
     return res
 
 
@@ -168,14 +168,17 @@ def leeExcel(req):
 
     print("valor Buscado: ", valorBuscado)
 
-    #return valorBuscado
+    return valorBuscado
 
 
-def makeWebhookResult():
+def makeWebhookResult(data):
 
     print ("preparando el mensaje de vuelta")
 
-    speech = "valor no encotrado..."
+    if data is None:
+      speech = "valor no encotrado..."
+    else:
+      speech = data
 
     print("Response:")
     print(speech)
