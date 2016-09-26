@@ -50,6 +50,7 @@ def webhook():
 #
 def processRequest(req):
 
+    dato=""
 
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark()
@@ -142,6 +143,8 @@ def leeExcel(req):
     parameters = result.get("parameters")
     cliente = parameters.get("Clientes")
 
+    print("Cliente: ", cliente)
+
     scope = ['https://spreadsheets.google.com/feeds']
 
     credentials = ServiceAccountCredentials.from_json_keyfile_name('My Project-e08df21666bc.json', scope)
@@ -161,7 +164,7 @@ def leeExcel(req):
 
     valorBuscado = worksheet.cell(row, column).value
 
-    print(valorBuscado)
+    print("valor Buscado: ", valorBuscado)
 
     return valorBuscado
 
