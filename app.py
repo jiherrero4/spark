@@ -141,7 +141,7 @@ def leeExcel(req):
     print ("vamos a leer el excel")
     result = req.get("result")
     parameters = result.get("parameters")
-    cliente = parameters.get("Clientes")
+    #cliente = parameters.get("Clientes")
 
     print("Cliente: ", cliente)
 
@@ -155,12 +155,13 @@ def leeExcel(req):
 
     worksheet = wks.worksheet("gestionados")
 
-    #cliente = worksheet.find("GESTAMP")
+    cliente = worksheet.find("GESTAMP")
     servicio = worksheet.find("S. Gestionado")
 
     column = cliente.col
     row = servicio.row
 
+    print("row: ",row, "column: ",column)
 
     valorBuscado = worksheet.cell(row, column).value
 
