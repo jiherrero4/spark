@@ -49,6 +49,8 @@ def webhook():
 #
 #
 def processRequest(req):
+
+
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark()
 
@@ -135,6 +137,7 @@ def llamaSala():
 # Lee informacion de un archivo excel
 def leeExcel(req):
 
+    print ("vamos a leer el excel")
     result = req.get("result")
     parameters = result.get("parameters")
     cliente = parameters.get("Clientes")
@@ -154,6 +157,7 @@ def leeExcel(req):
 
     column = cliente.col
     row = servicio.row
+
 
     valorBuscado = worksheet.cell(row, column).value
 
