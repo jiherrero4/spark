@@ -62,12 +62,12 @@ def processRequest(req):
         llamaSala()
 
     elif req.get("result").get("action") == "gestionado":
-        dato = leeExcel(req)
+        leeExcel(req)
 
     else:
         return {}
 
-    res = makeWebhookResult(dato)
+    res = makeWebhookResult()
     return res
 
 
@@ -143,7 +143,7 @@ def leeExcel(req):
     parameters = result.get("parameters")
     #cliente = parameters.get("Clientes")
 
-    print("Cliente: ", cliente)
+    #print("Cliente: ", cliente)
 
     scope = ['https://spreadsheets.google.com/feeds']
 
@@ -167,22 +167,14 @@ def leeExcel(req):
 
     print("valor Buscado: ", valorBuscado)
 
-    return valorBuscado
+    #return valorBuscado
 
 
-def makeWebhookResult(data):
+def makeWebhookResult():
 
     print ("preparando el mensaje de vuelta")
-    print (data)
-
-    if data is None:
-
-      speech = "valor no encotrado..."
-
-    else:
-
-      speech = data
-
+    
+    speech = "valor no encotrado..."
 
     print("Response:")
     print(speech)
