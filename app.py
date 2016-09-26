@@ -157,11 +157,15 @@ def leeExcel(req):
 
     valorBuscado = worksheet.cell(row, column).value
 
-    return valorBuscado
-
     print(valorBuscado)
 
+    return valorBuscado
+
+
 def makeWebhookResult(data):
+
+    print ("preparando el mensaje de vuelta")
+    print (data)
 
     if data is None:
 
