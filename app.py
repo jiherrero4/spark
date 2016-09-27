@@ -142,8 +142,8 @@ def leeExcel(req):
     result = req.get("result")
     parameters = result.get("parameters")
     nombreCliente = parameters.get("Clientes")
+    tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
 
-    #print("Cliente: ", cliente)
 
     scope = ['https://spreadsheets.google.com/feeds']
 
@@ -155,9 +155,9 @@ def leeExcel(req):
 
     worksheet = wks.worksheet("gestionados")
 
-    #cliente = worksheet.find("GESTAMP")
+
     cliente = worksheet.find(nombreCliente)
-    servicio = worksheet.find("S. Gestionado")
+    servicio = worksheet.find(tipoInformacion)
 
     column = cliente.col
     row = servicio.row
