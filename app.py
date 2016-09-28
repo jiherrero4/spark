@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# encoding: utf-8
 import urllib
 import json
 import os
