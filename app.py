@@ -138,7 +138,7 @@ def llamaSala():
 # Lee informacion de un archivo excel
 def leeExcel(req):
 
-    print ("vamos a leer el excel")
+    #print ("vamos a leer el excel")
     result = req.get("result")
     parameters = result.get("parameters")
     nombreCliente = parameters.get("Clientes")
@@ -162,7 +162,7 @@ def leeExcel(req):
     column = cliente.col
     row = servicio.row
 
-    print("row: ",row, "column: ",column)
+    #print("row: ",row, "column: ",column)
 
     valorBuscado = worksheet.cell(row, column).value
 
@@ -173,7 +173,7 @@ def leeExcel(req):
 
 def makeWebhookResult(data):
 
-    print ("preparando el mensaje de vuelta")
+    #print ("preparando el mensaje de vuelta")
 
     if data is None:
       speech = "valor no encotrado..."
