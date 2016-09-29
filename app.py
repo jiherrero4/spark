@@ -175,8 +175,8 @@ def makeWebhookResult(data):
 
     #print ("preparando el mensaje de vuelta")
 
-    if data is None:
-      speech = "valor no encotrado..."
+    if data is None or data =="":
+      speech = "no he encontrado lo que me pides, por favor especifica mas tu peticion..."
     else:
       speech = data
 
