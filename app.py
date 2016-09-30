@@ -139,6 +139,8 @@ def llamaSala():
 def leeExcel(req):
 
     #print ("vamos a leer el excel")
+
+    valorBuscado = ""
     result = req.get("result")
     parameters = result.get("parameters")
     nombreCliente = parameters.get("Clientes")
