@@ -3,4 +3,5 @@ requests==2.10.0
 gspread==0.4.1
 oauth2client==3.0.0
 flask_restful==0.3.5
+flask-mysql==1.4.0
 
