@@ -12,6 +12,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from flask import Flask
 from flask import request
 from flask import make_response
+from flask_restful import Resource, Api
 
 # Flask app should start in global layout
 # Flask es un web framework, de forma que podemos programar acciones determinadas basadas
