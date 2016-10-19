@@ -13,6 +13,7 @@ from flask import Flask
 from flask import request
 from flask import make_response
 from flask_restful import Resource, Api
+from flaskext.mysql import MySQL
 
 # Flask app should start in global layout
 # Flask es un web framework, de forma que podemos programar acciones determinadas basadas
@@ -64,6 +65,12 @@ def processRequest(req):
 
     elif req.get("result").get("action") == "gestionado":
         dato = leeExcel(req)
+
+    elif req.get("result").get("action") =="Inventario":
+        dato = leeInventario(req)
+
+    elif req.get("result").get("action") == "Ayuda":
+        dato = proporcionaAyuda(req)
 
     else:
         return {}
@@ -148,6 +155,7 @@ def leeExcel(req):
     tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
 
 
+
     scope = ['https://spreadsheets.google.com/feeds']
 
     credentials = ServiceAccountCredentials.from_json_keyfile_name('My Project-e08df21666bc.json', scope)
@@ -162,6 +170,7 @@ def leeExcel(req):
     cliente = worksheet.find(nombreCliente)
     servicio = worksheet.find(tipoInformacion)
 
+
     column = cliente.col
     row = servicio.row
 
@@ -173,6 +182,16 @@ def leeExcel(req):
 
     return valorBuscado
 
+
+def leeInventario(req):
+
+    datos_inventario = parameters.get("datos_inventario")
+
+def proporcionaAyuda(req):
+
+    ayuda = "Esto es una \n prueba"
+
+    return ayuda
 
 def makeWebhookResult(data):
 
