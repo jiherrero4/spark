@@ -188,6 +188,7 @@ def informacionSala(req):
 
     identificador_sala = get_bot_room_id(req)
     print ("el identificador de esta sala es: ", identificador_sala)
+    return identificador_sala
 
 def proporcionaAyuda(req):
     ayuda = "Esto es una \n prueba"
