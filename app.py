@@ -23,7 +23,6 @@ from flaskext.mysql import MySQL
 app = Flask(__name__)
 
 
-
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -46,13 +45,13 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
+
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la accion a realizar.
 #
 #
 def processRequest(req):
-
-    dato=""
+    dato = ""
 
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark()
@@ -66,7 +65,7 @@ def processRequest(req):
     elif req.get("result").get("action") == "gestionado":
         dato = leeExcel(req)
 
-    elif req.get("result").get("action") =="Inventario":
+    elif req.get("result").get("action") == "Inventario":
         dato = leeInventario(req)
 
     elif req.get("result").get("action") == "Ayuda":
@@ -80,7 +79,6 @@ def processRequest(req):
 
 
 def creaSalaSpark():
-
     print("funcion creaSalaSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
     roomTitle = "PruebaCreacionSala"
@@ -96,15 +94,15 @@ def creaSalaSpark():
 
 
 def creaGrupoSpark():
-
     print("funcion creaGrupoSpark iniciado")
     myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
-    #emailFile = userlist.txt
+    # emailFile = userlist.txt
     roomTitle = "Ojete"  # second argument
     # Read the email file and save the emails in an list
-    #emails = [line.strip() for line in open(emailFile)]
-    emails = ["jiherrero@ttrends.es","fsobrino@ttrends.es","pmartin@ttrends.es","jespejo@ttrends.es","jmvarelad@gmail.com"]
+    # emails = [line.strip() for line in open(emailFile)]
+    emails = ["jiherrero@ttrends.es", "fsobrino@ttrends.es", "pmartin@ttrends.es", "jespejo@ttrends.es",
+              "jmvarelad@gmail.com"]
 
     print("funcion creaGrupoSpark, paso2")
 
@@ -134,8 +132,8 @@ def creaGrupoSpark():
         print(membership)
         print()
 
-def llamaSala():
 
+def llamaSala():
     new = 2  # open in a new tab, if possible
 
     # open a public URL, in this case, the webbrowser docs
@@ -143,18 +141,16 @@ def llamaSala():
     url = "https://pxdemo.ttrends.es/webapp/#/?conference=jiherrero@ttrends.es"
     webbrowser.open(url, new=new)
 
+
 # Lee informacion de un archivo excel
 def leeExcel(req):
-
-    #print ("vamos a leer el excel")
+    # print ("vamos a leer el excel")
 
     valorBuscado = ""
     result = req.get("result")
     parameters = result.get("parameters")
     nombreCliente = parameters.get("Clientes")
     tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-
-
 
     scope = ['https://spreadsheets.google.com/feeds']
 
@@ -166,15 +162,13 @@ def leeExcel(req):
 
     worksheet = wks.worksheet("gestionados")
 
-
     cliente = worksheet.find(nombreCliente)
     servicio = worksheet.find(tipoInformacion)
-
 
     column = cliente.col
     row = servicio.row
 
-    #print("row: ",row, "column: ",column)
+    # print("row: ",row, "column: ",column)
 
     valorBuscado = worksheet.cell(row, column).value
 
@@ -184,23 +178,38 @@ def leeExcel(req):
 
 
 def leeInventario(req):
-
     datos_inventario = parameters.get("datos_inventario")
 
-def proporcionaAyuda(req):
 
+def proporcionaAyuda(req):
     ayuda = "Esto es una \n prueba"
+    get_rooms()
 
     return ayuda
 
+
+def get_rooms():
+    mytoken = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
+    header = {'Authorization': mytoken, 'content-type': 'application/json'}
+
+    result = requests.get(url='https://api.ciscospark.com/v1/rooms', headers=header)
+
+    JSONresponse = result.json()
+    roomlist_array = []
+
+    for EachRoom in JSONresponse['items']:
+        roomlist_array.append(EachRoom.get('title') + ' ** ' + EachRoom.get('id'))
+
+    print("Rooms:", roomlist_array)
+
+
 def makeWebhookResult(data):
+    # print ("preparando el mensaje de vuelta")
 
-    #print ("preparando el mensaje de vuelta")
-
-    if data is None or data =="":
-      speech = "no he encontrado lo que me pides, por favor especifica mas tu peticion..."
+    if data is None or data == "":
+        speech = "no he encontrado lo que me pides, por favor especifica mas tu peticion..."
     else:
-      speech = data
+        speech = data
 
     print("Response:")
     print(speech)
