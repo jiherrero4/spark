@@ -71,6 +71,9 @@ def processRequest(req):
     elif req.get("result").get("action") == "Ayuda":
         dato = proporcionaAyuda(req)
 
+    elif req.get("result").get("action") == "InformacionSala":
+        dato = informacionSala(req)
+
     else:
         return {}
 
@@ -181,16 +184,30 @@ def leeInventario(req):
     datos_inventario = parameters.get("datos_inventario")
 
 
+def informacionSala(req):
+
+    identificador_sala = get_bot_room_id(req)
+    print ("el identificador de esta sala es: ", identificador_sala)
+
 def proporcionaAyuda(req):
     ayuda = "Esto es una \n prueba"
-    get_rooms()
 
     return ayuda
 
 
-def get_rooms():
+def get_bot_room_id(req):
+
+    result = req.get("result")
+    ultima_peticion= result.get("resolvedQuery")
+    identificador_sala = get_rooms(ultima_peticion)
+
+    return identificador_sala
+
+def get_rooms(ultima_peticion):
     mytoken = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
-    header = {'Authorization': mytoken, 'content-type': 'application/json'}
+    #mytoken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
+
+    header = {'Authorization': "Bearer "+mytoken, 'content-type': 'application/json'}
 
     result = requests.get(url='https://api.ciscospark.com/v1/rooms', headers=header)
 
@@ -199,8 +216,38 @@ def get_rooms():
 
     for EachRoom in JSONresponse['items']:
         roomlist_array.append(EachRoom.get('title') + ' ** ' + EachRoom.get('id'))
+        last_message = get_last_message(EachRoom.get('id'))
+        print("Last Message:", last_message)
 
-    print("Rooms:", roomlist_array)
+        if (last_message == ultima_peticion):
+          return EachRoom.get('id')
+
+    return "sala no encontrada"
+    #print("Rooms:", roomlist_array)
+
+def get_last_message(roomid):
+    mytoken = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
+    #mytoken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
+
+    num_mensajes = 2
+    header = {'Authorization': "Bearer "+mytoken, 'content-type': 'application/json'}
+    payload = {'roomId': roomid, 'max': num_mensajes}
+
+    result = requests.get(url='https://api.ciscospark.com/v1/messages', headers=header,params=payload)
+
+    if result.status_code != 200:
+        return ""
+
+    JSONresponse = result.json()
+    messagelist_array = []
+    #print (JSONresponse)
+
+    for EachMessage in JSONresponse['items']:
+       messagelist_array.append(EachMessage.get('text'))
+
+    #print("Messages:",messagelist_array)
+
+    return messagelist_array[0]
 
 
 def makeWebhookResult(data):
