@@ -52,6 +52,12 @@ def webhook():
 #
 def processRequest(req):
     dato = ""
+    # Datos de Acceso del Bot: Token del BOT
+    bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
+
+    # Datos de Acceso de un moderador, me he puesto a mí por defecto. Es útil ya que el bot tiene ciertas limitaciones
+    # de acceso a datos (configuradas por seguridad por Cisco)
+    moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark()
@@ -72,7 +78,7 @@ def processRequest(req):
         dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
-        dato = informacionSala(req)
+        dato = informacionSala(req,bot_token,moderator_token)
 
     else:
         return {}
@@ -184,9 +190,9 @@ def leeInventario(req):
     datos_inventario = parameters.get("datos_inventario")
 
 
-def informacionSala(req):
+def informacionSala(req,bot_token,moderator_token):
 
-    identificador_sala = get_bot_room_id(req)
+    identificador_sala = get_bot_room_id(req,bot_token,moderator_token)
     print ("el identificador de esta sala es: ", identificador_sala)
     return identificador_sala
 
@@ -196,19 +202,17 @@ def proporcionaAyuda(req):
     return ayuda
 
 
-def get_bot_room_id(req):
+def get_bot_room_id(req,bot_token,moderator_token):
 
     result = req.get("result")
     ultima_peticion= result.get("resolvedQuery")
-    identificador_sala = get_rooms(ultima_peticion)
+    identificador_sala = get_rooms(ultima_peticion,bot_token,moderator_token)
 
     return identificador_sala
 
-def get_rooms(ultima_peticion):
-    mytoken = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
-    #mytoken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
+def get_rooms(ultima_peticion,bot_token,moderator_token):
 
-    header = {'Authorization': "Bearer "+mytoken, 'content-type': 'application/json'}
+    header = {'Authorization': "Bearer "+ bot_token, 'content-type': 'application/json'}
 
     result = requests.get(url='https://api.ciscospark.com/v1/rooms', headers=header)
 
@@ -217,7 +221,7 @@ def get_rooms(ultima_peticion):
 
     for EachRoom in JSONresponse['items']:
         roomlist_array.append(EachRoom.get('title') + ' ** ' + EachRoom.get('id'))
-        last_message = get_last_message(EachRoom.get('id'))
+        last_message = get_last_message(EachRoom.get('id'),bot_token,moderator_token)
         print("Last Message:", last_message)
 
         if (last_message == ultima_peticion):
@@ -226,18 +230,27 @@ def get_rooms(ultima_peticion):
     return "sala no encontrada"
     #print("Rooms:", roomlist_array)
 
-def get_last_message(roomid):
-    mytoken = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
-    #mytoken = "YzRjYTFiZDktNDcwOS00N2I2LTg5NDYtZjA4YTYwZGQzN2MyMjFmNWI2YzEtYWMx"
+def get_last_message(roomid,bot_token,moderator_token):
 
     num_mensajes = 2
-    header = {'Authorization': "Bearer "+mytoken, 'content-type': 'application/json'}
+    header = {'Authorization': "Bearer "+ bot_token, 'content-type': 'application/json'}
     payload = {'roomId': roomid, 'max': num_mensajes}
 
     result = requests.get(url='https://api.ciscospark.com/v1/messages', headers=header,params=payload)
 
+    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
+    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
     if result.status_code != 200:
-        return ""
+        header = {'Authorization': "Bearer " + moderator_token , 'content-type': 'application/json'}
+        payload = {'roomId': roomid, 'max': num_mensajes}
+
+        result = requests.get(url='https://api.ciscospark.com/v1/messages', headers=header, params=payload)
+
+        # si vuelve a fallar, entonces no podemos conseguir la información y por tanto el id de la sala...
+        if result.status_code != 200:
+           return ""
+
+
 
     JSONresponse = result.json()
     messagelist_array = []
