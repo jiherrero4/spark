@@ -32,7 +32,7 @@ def webhook():
 
     # Con indent lo que hacemos es introducir espacios en el formato de salida
     # de forma que se lea mejor, no simplemente un texto plano..
-    print(json.dumps(req, indent=4))
+    #print(json.dumps(req, indent=4))
 
     res = processRequest(req)
 
