@@ -224,7 +224,7 @@ def get_rooms(ultima_peticion,bot_token,moderator_token):
         last_message = get_last_message(EachRoom.get('id'),bot_token,moderator_token)
         print("Last Message:", last_message)
 
-        if (last_message == ultima_peticion):
+        if (last_message.__contains__(ultima_peticion)):
           return EachRoom.get('id')
 
     return "sala no encontrada"
