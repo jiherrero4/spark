@@ -83,6 +83,7 @@ def processRequest(req):
 
     elif req.get("result").get("action") == "InformacionSala":
         dato = get_room_sessions_id(req,bot_token,moderator_token)
+        status = post_message(dato, bot_token, dato)
 
     else:
         return {}
@@ -290,6 +291,18 @@ def get_session_id(req):
     session_id = req.get("sessionId")
 
     return session_id
+
+def post_message(roomid,bot_token,text):
+
+    header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
+    payload = {'roomId': roomid, 'text': text}
+
+    result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, params=payload)
+
+    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
+    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
+    if result.status_code != 200:
+        return "error al enviar el mensaje..."
 
 def makeWebhookResult(data):
     # print ("preparando el mensaje de vuelta")
