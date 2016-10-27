@@ -304,6 +304,9 @@ def post_message(roomid,bot_token,text):
     # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
     if result.status_code != 200:
         return "error al enviar el mensaje..."
+        print (str(result.status_code))
+        print ("RoomId:",roomid)
+        print ("Bottoken: ", bot_token)
     else:
         return "mensaje enviado correctamente..."
 
