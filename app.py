@@ -22,6 +22,10 @@ from flaskext.mysql import MySQL
 #
 app = Flask(__name__)
 
+# Utilizamos labels para guardar el identificador de la sala de spark de casa sesión
+# Sino lo sabemos vamos a buscarlo..
+labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
+               "Y2lzY29zcGFyazovL3VzL1JPT00vM2I5OGI5NTMtMGQyNC0zZDY5LWIyNTMtNzkxNzljOWZkNTVj"]]
 
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
@@ -33,7 +37,7 @@ def webhook():
     # Con indent lo que hacemos es introducir espacios en el formato de salida
     # de forma que se lea mejor, no simplemente un texto plano..
     print(json.dumps(req, indent=4))
-    
+
     res = processRequest(req)
 
     # Transformo res a un formato json tabulado.
@@ -78,7 +82,7 @@ def processRequest(req):
         dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
-        dato = informacionSala(req,bot_token,moderator_token)
+        dato = get_room_sessions_id(req,bot_token,moderator_token)
 
     else:
         return {}
@@ -188,6 +192,24 @@ def leeExcel(req):
 def leeInventario(req):
     datos_inventario = parameters.get("datos_inventario")
 
+# El objetivo de esta función es asociar el número de la sesión que nos envía api.ai
+# con el identificador de sala de spark (que no envía api.ai)
+# Mapeando el id de la sesión con el id de la sala el envio de mensajes a la sala
+# puede ser directo y más eficiente.
+
+def get_room_sessions_id(req,bot_token,moderator_token):
+
+    sessionId = req.get("sessionId")
+
+    for c in range(len(labels)):
+       if (labels[c][0] == sessionId):
+          return labels[c][1]
+
+    else:
+        roomId = informacionSala(req,bot_token,moderator_token)
+        labels.append([sessionId,roomId])
+        print("Anadiendo un nuevo identificador de sesion: ", sessionId, "-> con roomId: ",roomId)
+        return roomId
 
 def informacionSala(req,bot_token,moderator_token):
 
@@ -262,6 +284,11 @@ def get_last_message(roomid,bot_token,moderator_token):
 
     return messagelist_array[0]
 
+def get_session_id(req):
+
+    session_id = req.get("sessionId")
+
+    return session_id
 
 def makeWebhookResult(data):
     # print ("preparando el mensaje de vuelta")
