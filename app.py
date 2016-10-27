@@ -32,7 +32,8 @@ def webhook():
 
     # Con indent lo que hacemos es introducir espacios en el formato de salida
     # de forma que se lea mejor, no simplemente un texto plano..
-    #print(json.dumps(req, indent=4))
+    print(json.dumps(req, indent=4))
+    
     res = processRequest(req)
 
     # Transformo res a un formato json tabulado.
@@ -59,7 +60,7 @@ def processRequest(req):
     moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
     if req.get("result").get("action") == "creaSala":
-        creaSalaSpark()
+        creaSalaSpark(moderator_token)
 
     elif req.get("result").get("action") == "creaGrupo":
         creaGrupoSpark()
@@ -86,9 +87,8 @@ def processRequest(req):
     return res
 
 
-def creaSalaSpark():
+def creaSalaSpark(myToken):
     print("funcion creaSalaSpark iniciado")
-    myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
     roomTitle = "PruebaCreacionSala"
     headers = {"Authorization": "Bearer " + myToken, "Content-type": "application/json"}
     # Define the action to be taken in the HTTP request
