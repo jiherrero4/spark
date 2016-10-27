@@ -83,7 +83,7 @@ def processRequest(req):
 
     elif req.get("result").get("action") == "InformacionSala":
         dato = get_room_sessions_id(req,bot_token,moderator_token)
-        status = post_message(dato, bot_token, dato)
+        status = post_message(dato, bot_token, "probando")
         print (status)
 
     else:
@@ -306,7 +306,7 @@ def post_message(roomid,bot_token,text):
     # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
     # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
     if result.status_code != 200:
-        return str(result.status_code)
+        return result.json()
         print ("RoomId:",roomid)
         print ("Bottoken: ", bot_token)
     else:
