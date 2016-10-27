@@ -203,6 +203,7 @@ def get_room_sessions_id(req,bot_token,moderator_token):
 
     for c in range(len(labels)):
        if (labels[c][0] == sessionId):
+          print("ya dispongo del identificador de la sala, lo envio...")
           return labels[c][1]
 
     else:
