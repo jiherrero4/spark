@@ -298,13 +298,15 @@ def post_message(roomid,bot_token,text):
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
     payload = {'roomId': roomid, 'text': text}
 
+    print("RoomId:", roomid)
+    print("Bottoken: ", bot_token)
+
     result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, params=payload)
 
     # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
     # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
     if result.status_code != 200:
-        return "error al enviar el mensaje..."
-        print (str(result.status_code))
+        return str(result.status_code)
         print ("RoomId:",roomid)
         print ("Bottoken: ", bot_token)
     else:
