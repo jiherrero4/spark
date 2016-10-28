@@ -79,6 +79,9 @@ def processRequest(req):
         dato = leeInventario(req)
 
     elif req.get("result").get("action") == "Ayuda":
+        dato = get_room_sessions_id(req, bot_token, moderator_token)
+        texto = help_definition()
+        status = post_message(dato, bot_token,texto)
         dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
@@ -311,6 +314,13 @@ def post_message(roomid,bot_token,text):
         print ("Bottoken: ", bot_token)
     else:
         return "mensaje enviado correctamente..."
+
+def help_definition():
+
+    text = "Hola, soy Andy \nEstos son los temas sobre los que te puedo ayudar: \n - Informes de estadisticas;\n - Informacion de inventario \n - Actas de reuniones\n"
+
+    return text
+
 
 def makeWebhookResult(data):
     # print ("preparando el mensaje de vuelta")
