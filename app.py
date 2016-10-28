@@ -81,7 +81,7 @@ def processRequest(req):
     elif req.get("result").get("action") == "Ayuda":
         dato = get_room_sessions_id(req, bot_token, moderator_token)
         texto = help_definition()
-        status = post_message(dato, bot_token,texto)
+        status = post_message_markDown(dato, bot_token,texto)
         dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
@@ -315,9 +315,28 @@ def post_message(roomid,bot_token,text):
     else:
         return "mensaje enviado correctamente..."
 
+def post_message_markDown(roomid,bot_token,markdown):
+
+    header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
+    payload = {'roomId': roomid, 'markdown': markdown}
+
+    print("RoomId:", roomid)
+    print("Bottoken: ", bot_token)
+
+    result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, json=payload)
+
+    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
+    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
+    if result.status_code != 200:
+        return result.json()
+        print ("RoomId:",roomid)
+        print ("Bottoken: ", bot_token)
+    else:
+        return "mensaje enviado correctamente..."
+
 def help_definition():
 
-    text = "Hola, soy Andy \nEstos son los temas sobre los que te puedo ayudar: \n - Informes de estadisticas;\n - Informacion de inventario \n - Actas de reuniones\n"
+    text = "Hola, soy Andy! \nEstos son los temas sobre los que te puedo ayudar: \n 1. **Informes de estadisticas.**\n 2. **Informacion de inventario** \n 3. **Actas de reuniones**\n"
 
     return text
 
