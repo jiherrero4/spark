@@ -50,6 +50,16 @@ def webhook():
     return r
 
 
+@app.route('/webhookSpark', methods=['POST'])
+def webhookSpark():
+    req = request.get_json(silent=True, force=True)
+
+    print("PASO1: Request recibido de api.ai:")
+
+    # Con indent lo que hacemos es introducir espacios en el formato de salida
+    # de forma que se lea mejor, no simplemente un texto plano..
+    print(json.dumps(req, indent=4))
+
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la accion a realizar.
 #
