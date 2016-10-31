@@ -73,11 +73,7 @@ def processRequest(req):
         llamaSala()
 
     elif req.get("result").get("action") == "gestionado":
-        result = req.get("result")
-        parameters = result.get("parameters")
-        nombreCliente = parameters.get("Clientes")
-        tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        dato = leeExcel(tipoInformacion,nombreCliente)
+        dato = leeExcel(req)
 
     elif req.get("result").get("action") == "Inventario":
         dato = leeInventario(req)
@@ -171,11 +167,15 @@ def llamaSala():
     webbrowser.open(url, new=new)
 
 
-# Lee informacion de un archivo google sheet en la nube
-def leeExcel(datoFila, datoColumna):
+# Lee informacion de un archivo excel
+def leeExcel(req):
     # print ("vamos a leer el excel")
 
     valorBuscado = ""
+    result = req.get("result")
+    parameters = result.get("parameters")
+    nombreCliente = parameters.get("Clientes")
+    tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
 
     scope = ['https://spreadsheets.google.com/feeds']
 
@@ -187,11 +187,11 @@ def leeExcel(datoFila, datoColumna):
 
     worksheet = wks.worksheet("gestionados")
 
-    valor_datoFila = worksheet.find(datoFila)
-    valor_datoColumna = worksheet.find(datoColumna)
+    cliente = worksheet.find(nombreCliente)
+    servicio = worksheet.find(tipoInformacion)
 
-    row = valor_datoFila.row
-    column = valor_datoColumna.col
+    column = cliente.col
+    row = servicio.row
 
     # print("row: ",row, "column: ",column)
 
@@ -214,8 +214,6 @@ def leeInventario(req):
 #  -  Leer mensajes de las salas
 #  -  ...
 ######################################################################################################################
-
-
 # El objetivo de esta función es asociar el número de la sesión que nos envía api.ai
 # con el identificador de sala de spark (que no envía api.ai)
 # Mapeando el id de la sesión con el id de la sala el envio de mensajes a la sala
@@ -352,14 +350,11 @@ def post_message_markDown(roomid,bot_token,markdown):
     else:
         return "mensaje enviado correctamente..."
 
-
-
 ######################################################################################################################
 #  Definicion de opciones y dialogos con los clientes
 #  - Mensaje de ayuda
 #  - Mensaje por defecto en caso de no encontrar la respuesta.
 ######################################################################################################################
-
 #  Definición de  las opciones de ayuda.
 def help_definition():
 
