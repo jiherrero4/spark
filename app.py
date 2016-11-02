@@ -385,9 +385,8 @@ def get_message(bot_token, id):
 
     if result.status_code != 200:
        print("Error al leer mensaje")
-       JSONresponse = result.json()
-
-
+        
+    JSONresponse = result.json()
     print(JSONresponse)
     return JSONresponse
 
