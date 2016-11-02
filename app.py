@@ -66,7 +66,7 @@ def webhookSpark():
 
     data = req.get("data")
     personEmail = data.get("personEmail")
-    id = req.get("id")
+    id = data.get("id")
 
     if (personEmail != bot_email):
       print(json.dumps(req, indent=4))
