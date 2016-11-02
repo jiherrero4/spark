@@ -53,7 +53,8 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-
+#  Mensajes que llegan directamente de una sala Spark y van dirigidos al bot
+#
 @app.route('/webhookSpark', methods=['POST'])
 def webhookSpark():
 
@@ -383,9 +384,11 @@ def get_message(bot_token, id):
     result = requests.get(url='https://api.ciscospark.com/v1/messages/'+ id, headers=header)
 
     if result.status_code != 200:
-     JSONresponse = result.json()
-     print (JSONresponse)
+       print("Error al leer mensaje")
+       JSONresponse = result.json()
 
+
+    print(JSONresponse)
     return JSONresponse
 
 ######################################################################################################################
