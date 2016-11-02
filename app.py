@@ -27,6 +27,8 @@ app = Flask(__name__)
 labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
                "Y2lzY29zcGFyazovL3VzL1JPT00vM2I5OGI5NTMtMGQyNC0zZDY5LWIyNTMtNzkxNzljOWZkNTVj"]]
 
+bot_email = "Trends2@sparkbot.io"
+
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -52,13 +54,19 @@ def webhook():
 
 @app.route('/webhookSpark', methods=['POST'])
 def webhookSpark():
+
     req = request.get_json(silent=True, force=True)
 
-    print("PASO1: Request recibido de api.ai:")
+    print("PASO1: Mensaje recibido desde una spark room:")
 
     # Con indent lo que hacemos es introducir espacios en el formato de salida
     # de forma que se lea mejor, no simplemente un texto plano..
-    print(json.dumps(req, indent=4))
+
+    data = req.get("data")
+    personEmail = data.get("personEmail")
+
+    if (personEmail != bot_email):
+      print(json.dumps(req, indent=4))
 
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la accion a realizar.
