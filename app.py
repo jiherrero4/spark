@@ -70,9 +70,10 @@ def webhookSpark():
 
     if (personEmail != bot_email):
       print(json.dumps(req, indent=4))
+      print("id: ",id)
       message = get_message(bot_token, id)
       text = message.get("text")
-      print(text)
+      print("Text: ", text)
 
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la accion a realizar.
