@@ -28,6 +28,8 @@ labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
                "Y2lzY29zcGFyazovL3VzL1JPT00vM2I5OGI5NTMtMGQyNC0zZDY5LWIyNTMtNzkxNzljOWZkNTVj"]]
 
 bot_email = "Trends2@sparkbot.io"
+bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
+moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
@@ -64,9 +66,13 @@ def webhookSpark():
 
     data = req.get("data")
     personEmail = data.get("personEmail")
+    id = req.get("id")
 
     if (personEmail != bot_email):
       print(json.dumps(req, indent=4))
+      message = get_message(bot_token, id)
+      text = message.get("text")
+      print(text)
 
 # En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
 # Lo primero que vamos a buscar es la accion a realizar.
@@ -75,11 +81,10 @@ def webhookSpark():
 def processRequest(req):
     dato = ""
     # Datos de Acceso del Bot: Token del BOT
-    bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
+
 
     # Datos de Acceso de un moderador, me he puesto a mí por defecto. Es útil ya que el bot tiene ciertas limitaciones
     # de acceso a datos (configuradas por seguridad por Cisco)
-    moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark(moderator_token)
@@ -370,7 +375,17 @@ def post_message_markDown(roomid,bot_token,markdown):
     else:
         return "mensaje enviado correctamente..."
 
+def get_message(bot_token, id):
 
+    header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
+
+    result = requests.get(url='https://api.ciscospark.com/v1/messages/'+ id, headers=header)
+
+    if result.status_code != 200:
+     JSONresponse = result.json()
+     print (JSONresponse)
+
+    return JSONresponse
 
 ######################################################################################################################
 #  Definicion de opciones y dialogos con los clientes
