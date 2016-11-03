@@ -96,7 +96,7 @@ def webhookSpark():
       message = get_message(bot_token, id)
       text = message.get("text")
       print("Text: ", text)
-
+      api_ai_request(text)
 
 
 ######################################################################################################################
@@ -162,8 +162,6 @@ def processRequest(req):
 
 def api_ai_request(query_from_spark):
 
-
-
     ai = apiai.ApiAI(api_ai_token)
 
     request = ai.text_request()
@@ -172,7 +170,7 @@ def api_ai_request(query_from_spark):
 
     # request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
 
-    request.query = "ayuda"
+    request.query = query_from_spark
 
     response = request.getresponse()
 
