@@ -183,6 +183,7 @@ def api_ai_request(query_from_spark):
     #JSONresponse = json.loads(string)
     JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
     print("JSONresponse:",JSONresponse)
+    
 
     return JSONresponse
 
