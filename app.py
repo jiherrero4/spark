@@ -97,6 +97,7 @@ def webhookSpark():
       text = message.get("text")
       print("Text: ", text)
       response = api_ai_request(text)
+      print("Response:",json.dumps(response, indent=4))
       fulfillment = response.get("fulfillment")
       response_text = fulfillment.get("speech")
       print("response_text:", response_text)
