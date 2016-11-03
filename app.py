@@ -175,9 +175,9 @@ def api_ai_request(query_from_spark):
     request.query = query_from_spark
 
     response = request.getresponse()
-    JSONresponse = response.json()
 
     print("Respuesta desde Api.ai: ", response.read())
+    JSONresponse = response.json()
 
     return JSONresponse
 
@@ -447,6 +447,25 @@ def get_message(bot_token, id):
     JSONresponse = result.json()
     print(JSONresponse)
     return JSONresponse
+
+def post_message_demo(roomid,bot_token,text):
+
+    header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
+    payload = {'roomId': roomid, 'text': text}
+
+    print("RoomId:", roomid)
+    print("Bottoken: ", bot_token)
+
+    result = requests.post(url='https://ttrends1.herokuapp.com/webhookSpark', headers=header, json=payload)
+
+    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
+    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
+    if result.status_code != 200:
+        return result.json()
+        print ("RoomId:",roomid)
+        print ("Bottoken: ", bot_token)
+    else:
+        return "mensaje enviado correctamente..."
 
 ######################################################################################################################
 #  Definicion de opciones y dialogos con los clientes
