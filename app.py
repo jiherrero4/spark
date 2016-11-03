@@ -41,6 +41,7 @@ labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
 bot_email = "Trends2@sparkbot.io"
 bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
 moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
+api_ai_token = "594cb32ae50447938756853f36492b67"
 
 
 ######################################################################################################################
@@ -105,6 +106,8 @@ def webhookSpark():
 #  -  ...
 ######################################################################################################################
 
+
+
 #
 def processRequest(req):
     dato = ""
@@ -157,9 +160,25 @@ def processRequest(req):
 #  -  ...
 ######################################################################################################################
 
-def api_ai_request(req):
+def api_ai_request(query_from_spark):
 
-   return""
+
+
+    ai = apiai.ApiAI(api_ai_token)
+
+    request = ai.text_request()
+
+    request.lang = 'es'  # optional, default value equal 'en'
+
+    # request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
+
+    request.query = "ayuda"
+
+    response = request.getresponse()
+
+    print("Respuesta desde Api.ai: ", response.read())
+
+    return""
 
 
 ######################################################################################################################
