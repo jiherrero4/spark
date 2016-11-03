@@ -99,7 +99,7 @@ def webhookSpark():
       response = api_ai_request(text)
       fulfillment = response.get("fulfillment")
       response_text = fulfillment.get("speech")
-      print("response_tex:", response_tex)
+      print("response_text:", response_text)
 
 ######################################################################################################################
 #  Procesamiento de peticiones:
@@ -175,7 +175,7 @@ def api_ai_request(query_from_spark):
     request.query = query_from_spark
 
     response = request.getresponse()
-    JSONresponse = respond.json()
+    JSONresponse = response.json()
 
     print("Respuesta desde Api.ai: ", response.read())
 
