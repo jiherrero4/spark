@@ -15,6 +15,17 @@ from flask import make_response
 from flask_restful import Resource, Api
 from flaskext.mysql import MySQL
 
+import os.path
+import sys
+
+try:
+    import apiai
+except ImportError:
+    sys.path.append(
+        os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
+    )
+    import apiai
+
 # Flask app should start in global layout
 # Flask es un web framework, de forma que podemos programar acciones determinadas basadas
 # en que tipo de mensaje web nos llega a nuestra aplicacion
@@ -30,6 +41,15 @@ labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
 bot_email = "Trends2@sparkbot.io"
 bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
 moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
+
+
+######################################################################################################################
+#  Procesamiento de webhooks
+#  -  Desde Api.ai
+#  -  Desde una sala de Spark
+#  -  ...
+######################################################################################################################
+
 
 # Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
 @app.route('/webhook', methods=['POST'])
@@ -76,9 +96,15 @@ def webhookSpark():
       text = message.get("text")
       print("Text: ", text)
 
-# En esta funcion vamos a procesar el mensaje que hemos recibido, webhook (post).
-# Lo primero que vamos a buscar es la accion a realizar.
-#
+
+
+######################################################################################################################
+#  Procesamiento de peticiones:
+#  -  Desde Api.ai
+#  -  Desde una sala de Spark
+#  -  ...
+######################################################################################################################
+
 #
 def processRequest(req):
     dato = ""
@@ -123,6 +149,18 @@ def processRequest(req):
 
     res = makeWebhookResult(dato)
     return res
+
+######################################################################################################################
+#  Natural Language:
+#  -  Enviamos peticiones a nuestro agente en Api.ai
+#  -
+#  -  ...
+######################################################################################################################
+
+def api_ai_request(req):
+
+   return""
+
 
 ######################################################################################################################
 #  Acciones desencadenadas de las peticiones de los clientes
@@ -385,7 +423,7 @@ def get_message(bot_token, id):
 
     if result.status_code != 200:
        print("Error al leer mensaje")
-        
+
     JSONresponse = result.json()
     print(JSONresponse)
     return JSONresponse
