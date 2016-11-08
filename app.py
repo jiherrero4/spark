@@ -183,12 +183,12 @@ def api_ai_request(query_from_spark):
     response = request.getresponse()
 
     print("Response from apiai (instance):", response)
-    print("Respuesta desde Api.ai: ", response.read())
+    #print("Respuesta desde Api.ai: ", response.read())
 
     try:
        #JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
-       string = response.read().replace('\n', '')
-       print("response:", response.read().replace('\n', ''))
+
+       #print("response:", response.read().replace('\n', ''))
        JSONresponse = json.loads(response.read().replace('\n', ''))
        print("JSONresponse:", JSONresponse)
        return JSONresponse
