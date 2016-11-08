@@ -184,15 +184,14 @@ def api_ai_request(query_from_spark):
 
     print("Response from apiai (instance):", response)
     print("Respuesta desde Api.ai: ", response.read())
-    #string = response.read().decode('utf-8')
-    #JSONresponse = json.loads(string)
+
     try:
-       JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
+       #JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
+       string = response.read().decode('utf-8')
+       JSONresponse = json.loads(string)
+       print("JSONresponse:", JSONresponse)
     except Exception as ex:
         logging.exception("Error al cargar json:", ex)
-
-    print("JSONresponse:",JSONresponse)
-
 
     return JSONresponse
 
