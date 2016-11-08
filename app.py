@@ -192,7 +192,7 @@ def api_ai_request(query_from_spark):
        print("JSONresponse:", JSONresponse)
        return JSONresponse
     except Exception as ex:
-        logging.exception("Error al cargar json:", ex)
+        print("Error al cargar json:", ex)
         return "Error"
 
 
