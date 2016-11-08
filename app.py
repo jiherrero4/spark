@@ -187,10 +187,9 @@ def api_ai_request(query_from_spark):
 
     try:
        #JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
-       string = response.read()
-       print("string:", string)
-       string2 = (string.replace('\n', ''))
-       JSONresponse = json.loads(string2)
+       string = response.read().replace('\n', '')
+       print("response:", response.read().replace('\n', ''))
+       JSONresponse = json.loads(response.read().replace('\n', ''))
        print("JSONresponse:", JSONresponse)
        return JSONresponse
     except Exception as ex:
