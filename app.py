@@ -95,11 +95,11 @@ def webhookSpark():
     id = data.get("id")
 
     if (personEmail != bot_email):
-      print(json.dumps(req, indent=4))
-      print("id: ",id)
+      logging.debug(json.dumps(req, indent=4))
+      logging.debug("id: ",id)
       message = get_message(bot_token, id)
       text = message.get("text")
-      print("Text: ", text)
+      logging.debug("Text: ", text)
       response = api_ai_request(text)
       #print("Response:",json.dumps(response, indent=4))
       #fulfillment = response.get("fulfillment")
