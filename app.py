@@ -8,6 +8,7 @@ import sys
 import webbrowser
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import logging
 
 from flask import Flask
 from flask import request
@@ -25,6 +26,9 @@ except ImportError:
         os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)
     )
     import apiai
+
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Flask app should start in global layout
 # Flask es un web framework, de forma que podemos programar acciones determinadas basadas
@@ -177,12 +181,16 @@ def api_ai_request(query_from_spark):
 
     response = request.getresponse()
 
-    print("Response:", response)
-    print("Respuesta desde Api.ai: ", response.read())
+    logging.debug("Response from apiai (instance):", response)
+    logging.debug("Respuesta desde Api.ai: ", response.read())
     #string = response.read().decode('utf-8')
     #JSONresponse = json.loads(string)
-    JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
-    print("JSONresponse:",JSONresponse)
+    try:
+       JSONresponse = json.loads(request.getresponse().read().decode('UTF-8'))
+    except Exception as ex:
+        logging.exception("Error al cargar json:", ex)
+
+    logging.debug("JSONresponse:",JSONresponse)
 
 
     return JSONresponse
