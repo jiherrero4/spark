@@ -55,29 +55,6 @@ api_ai_token = "594cb32ae50447938756853f36492b67"
 #  -  ...
 ######################################################################################################################
 
-
-# Ahora vamos a definir que hacer si nuestra aplicacion recibe un webhook tipo POST
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    req = request.get_json(silent=True, force=True)
-
-    print("PASO1: Request recibido de api.ai:")
-
-    # Con indent lo que hacemos es introducir espacios en el formato de salida
-    # de forma que se lea mejor, no simplemente un texto plano..
-    print(json.dumps(req, indent=4))
-
-    res = processRequest(req)
-
-    # Transformo res a un formato json tabulado.
-    res = json.dumps(res, indent=4)
-    # print(res)
-    # La respuesta tiene que ser tipo application/json
-    # La funcion make_response pertenece a la libreria de Flask
-    r = make_response(res)
-    r.headers['Content-Type'] = 'application/json'
-    return r
-
 #  Mensajes que llegan directamente de una sala Spark y van dirigidos al bot
 #
 @app.route('/webhookSpark', methods=['POST'])
@@ -137,6 +114,7 @@ def processRequestSpark(req, roomId):
         nombreCliente = parameters.get("Clientes")
         tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
         dato = leeExcel(tipoInformacion,nombreCliente)
+        status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Inventario":
         dato = leeInventario(req)
@@ -144,7 +122,6 @@ def processRequestSpark(req, roomId):
     elif req.get("result").get("action") == "Ayuda":
         texto = help_definition()
         status = post_message_markDown(roomId, bot_token,texto)
-        dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
         dato = get_room_sessions_id(req,bot_token,moderator_token)
@@ -156,52 +133,8 @@ def processRequestSpark(req, roomId):
 
     res = makeWebhookResult(dato)
     return res
-
 
 #
-def processRequest(req):
-    dato = ""
-    # Datos de Acceso del Bot: Token del BOT
-
-
-    # Datos de Acceso de un moderador, me he puesto a mí por defecto. Es útil ya que el bot tiene ciertas limitaciones
-    # de acceso a datos (configuradas por seguridad por Cisco)
-
-    if req.get("result").get("action") == "creaSala":
-        creaSalaSpark(moderator_token)
-
-    elif req.get("result").get("action") == "creaGrupo":
-        creaGrupoSpark()
-
-    elif req.get("result").get("action") == "llama":
-        llamaSala()
-
-    elif req.get("result").get("action") == "gestionado":
-        result = req.get("result")
-        parameters = result.get("parameters")
-        nombreCliente = parameters.get("Clientes")
-        tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        dato = leeExcel(tipoInformacion,nombreCliente)
-
-    elif req.get("result").get("action") == "Inventario":
-        dato = leeInventario(req)
-
-    elif req.get("result").get("action") == "Ayuda":
-        dato = get_room_sessions_id(req, bot_token, moderator_token)
-        texto = help_definition()
-        status = post_message_markDown(dato, bot_token,texto)
-        dato = proporcionaAyuda(req)
-
-    elif req.get("result").get("action") == "InformacionSala":
-        dato = get_room_sessions_id(req,bot_token,moderator_token)
-        status = post_message(dato, bot_token, "probando")
-        print (status)
-
-    else:
-        return {}
-
-    res = makeWebhookResult(dato)
-    return res
 
 ######################################################################################################################
 #  Natural Language:
@@ -382,11 +315,6 @@ def informacionSala(req,bot_token,moderator_token):
     print ("el identificador de esta sala es: ", identificador_sala)
     return identificador_sala
 
-def proporcionaAyuda(req):
-    ayuda = "Esto es una \n prueba"
-
-    return ayuda
-
 
 def get_bot_room_id(req,bot_token,moderator_token):
 
@@ -506,24 +434,7 @@ def get_message(bot_token, id):
     print(JSONresponse)
     return JSONresponse
 
-def post_message_demo(roomid,bot_token,text):
 
-    header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
-    payload = {'roomId': roomid, 'text': text}
-
-    print("RoomId:", roomid)
-    print("Bottoken: ", bot_token)
-
-    result = requests.post(url='https://ttrends1.herokuapp.com/webhookSpark', headers=header, json=payload)
-
-    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
-    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
-    if result.status_code != 200:
-        return result.json()
-        print ("RoomId:",roomid)
-        print ("Bottoken: ", bot_token)
-    else:
-        return "mensaje enviado correctamente..."
 
 ######################################################################################################################
 #  Definicion de opciones y dialogos con los clientes
