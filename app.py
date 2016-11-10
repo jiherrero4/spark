@@ -103,6 +103,9 @@ def webhookSpark():
       response = api_ai_request(text)
       #print("Response:",json.dumps(response, indent=4))
       #fulfillment = response.get("fulfillment")
+      result = response.get("result")
+      action = result.get("action")
+      print("Action:", action)
       #response_text = fulfillment.get("speech")
       #print("response_text:", response_text)
 
@@ -113,7 +116,49 @@ def webhookSpark():
 #  -  Desde una sala de Spark
 #  -  ...
 ######################################################################################################################
+def processRequestSpark(req):
+    dato = ""
+    # Datos de Acceso del Bot: Token del BOT
 
+
+    # Datos de Acceso de un moderador, me he puesto a mí por defecto. Es útil ya que el bot tiene ciertas limitaciones
+    # de acceso a datos (configuradas por seguridad por Cisco)
+
+    if req.get("result").get("action") == "creaSala":
+        creaSalaSpark(moderator_token)
+
+    elif req.get("result").get("action") == "creaGrupo":
+        creaGrupoSpark()
+
+    elif req.get("result").get("action") == "llama":
+        llamaSala()
+
+    elif req.get("result").get("action") == "gestionado":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        nombreCliente = parameters.get("Clientes")
+        tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
+        dato = leeExcel(tipoInformacion,nombreCliente)
+
+    elif req.get("result").get("action") == "Inventario":
+        dato = leeInventario(req)
+
+    elif req.get("result").get("action") == "Ayuda":
+        dato = get_room_sessions_id(req, bot_token, moderator_token)
+        texto = help_definition()
+        status = post_message_markDown(dato, bot_token,texto)
+        dato = proporcionaAyuda(req)
+
+    elif req.get("result").get("action") == "InformacionSala":
+        dato = get_room_sessions_id(req,bot_token,moderator_token)
+        status = post_message(dato, bot_token, "probando")
+        print (status)
+
+    else:
+        return {}
+
+    res = makeWebhookResult(dato)
+    return res
 
 
 #
