@@ -92,6 +92,7 @@ def webhookSpark():
 
     data = req.get("data")
     personEmail = data.get("personEmail")
+    roomId = data.get("roomId")
     id = data.get("id")
 
     if (personEmail != bot_email):
@@ -99,15 +100,15 @@ def webhookSpark():
       logging.debug("id: ",id)
       message = get_message(bot_token, id)
       text = message.get("text")
-      logging.debug("Text: ", text)
+      print("Text: ", text)
       response = api_ai_request(text)
       #print("Response:",json.dumps(response, indent=4))
       #fulfillment = response.get("fulfillment")
       result = response.get("result")
       action = result.get("action")
       print("Action:", action)
-      #response_text = fulfillment.get("speech")
-      #print("response_text:", response_text)
+      processRequestSpark(response, roomId)
+
 
     return "OK"
 ######################################################################################################################
@@ -116,13 +117,10 @@ def webhookSpark():
 #  -  Desde una sala de Spark
 #  -  ...
 ######################################################################################################################
-def processRequestSpark(req):
+def processRequestSpark(req, roomId):
     dato = ""
     # Datos de Acceso del Bot: Token del BOT
 
-
-    # Datos de Acceso de un moderador, me he puesto a mí por defecto. Es útil ya que el bot tiene ciertas limitaciones
-    # de acceso a datos (configuradas por seguridad por Cisco)
 
     if req.get("result").get("action") == "creaSala":
         creaSalaSpark(moderator_token)
@@ -144,9 +142,8 @@ def processRequestSpark(req):
         dato = leeInventario(req)
 
     elif req.get("result").get("action") == "Ayuda":
-        dato = get_room_sessions_id(req, bot_token, moderator_token)
         texto = help_definition()
-        status = post_message_markDown(dato, bot_token,texto)
+        status = post_message_markDown(roomId, bot_token,texto)
         dato = proporcionaAyuda(req)
 
     elif req.get("result").get("action") == "InformacionSala":
