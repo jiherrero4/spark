@@ -113,6 +113,8 @@ def processRequestSpark(req, roomId):
         parameters = result.get("parameters")
         nombreCliente = parameters.get("Clientes")
         tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
+        print("Nombre del cliente:",nombreCliente)
+        print("tipoInformacion:", tipoInformacion)
         dato = leeExcel(tipoInformacion,nombreCliente)
         status = post_message_markDown(roomId, bot_token, dato)
 
