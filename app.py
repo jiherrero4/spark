@@ -113,9 +113,9 @@ def processRequestSpark(req, roomId):
         parameters = result.get("parameters")
         nombreCliente = parameters.get("Clientes")
         tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        print("Nombre del cliente:",nombreCliente)
-        print("tipoInformacion:", tipoInformacion)
-        dato = leeExcel(tipoInformacion,nombreCliente)
+        print("Nombre del cliente:",json.dumps(nombreCliente))
+        print("tipoInformacion:", json.dumps(tipoInformacion))
+        dato = leeExcel(json.dumps(tipoInformacion),json.dumps(nombreCliente))
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Inventario":
