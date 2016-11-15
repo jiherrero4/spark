@@ -125,7 +125,7 @@ def processRequestSpark(req, roomId):
         worksheet = "Informes"
         dato = leeExcel(mes,tipoInforme, worksheet)
         dato_markdown = "[informe](" + dato + ")"
-        status = post_message_markDown(roomId, bot_token, dato)
+        status = post_message_markDown(roomId, bot_token, dato_markdown)
 
     elif req.get("result").get("action") == "Inventario":
         dato = leeInventario(req)
