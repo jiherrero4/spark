@@ -124,6 +124,7 @@ def processRequestSpark(req, roomId):
         tipoInforme = "informe estadisticas"
         worksheet = "Informes"
         dato = leeExcel(mes,tipoInforme, worksheet)
+        dato_markdown = "[informe](" + dato + ")"
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Inventario":
