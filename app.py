@@ -74,7 +74,7 @@ def webhookSpark():
 
     if (personEmail != bot_email):
       logging.debug(json.dumps(req, indent=4))
-      logging.debug("id: ",id)
+      print("id: ",id)
       message = get_message(bot_token, id)
       text = message.get("text")
       print("Text: ", text)
@@ -113,9 +113,15 @@ def processRequestSpark(req, roomId):
         parameters = result.get("parameters")
         nombreCliente = parameters.get("Clientes")
         tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        print("Nombre del cliente:",nombreCliente)
-        print("tipoInformacion:", tipoInformacion)
         dato = leeExcel(tipoInformacion,nombreCliente)
+        status = post_message_markDown(roomId, bot_token, dato)
+
+    elif req.get("result").get("action") == "estadisticas":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        mes = parameters.get("meses")
+        tipoInforme = "informe estadisticas"
+        dato = leeExcel(mes,tipoInforme)
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Inventario":
