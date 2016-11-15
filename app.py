@@ -113,7 +113,8 @@ def processRequestSpark(req, roomId):
         parameters = result.get("parameters")
         nombreCliente = parameters.get("Clientes")
         tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        dato = leeExcel(tipoInformacion,nombreCliente)
+        worksheet = "gestionados"
+        dato = leeExcel(tipoInformacion,nombreCliente,worksheet)
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "estadisticas":
@@ -121,7 +122,8 @@ def processRequestSpark(req, roomId):
         parameters = result.get("parameters")
         mes = parameters.get("meses")
         tipoInforme = "informe estadisticas"
-        dato = leeExcel(mes,tipoInforme)
+        worksheet = "Informes"
+        dato = leeExcel(mes,tipoInforme, worksheet)
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Inventario":
@@ -254,7 +256,7 @@ def llamaSala():
 
 
 # Lee informacion de un archivo google sheet en la nube
-def leeExcel(datoFila, datoColumna):
+def leeExcel(datoFila, datoColumna, worksheet):
     # print ("vamos a leer el excel")
 
     valorBuscado = ""
@@ -267,7 +269,10 @@ def leeExcel(datoFila, datoColumna):
 
     wks = gc.open("prueba1")
 
-    worksheet = wks.worksheet("gestionados")
+    worksheet = wks.worksheet(worksheet)
+
+    print("datoFila:", datoFila)
+    print("datoColumna:", datoColumna)
 
     valor_datoFila = worksheet.find(datoFila)
     valor_datoColumna = worksheet.find(datoColumna)
