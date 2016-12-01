@@ -105,18 +105,6 @@ def processRequestSpark(req, roomId):
     elif req.get("result").get("action") == "creaGrupo":
         creaGrupoSpark()
 
-    elif req.get("result").get("action") == "llama":
-        llamaSala()
-
-    elif req.get("result").get("action") == "gestionado":
-        result = req.get("result")
-        parameters = result.get("parameters")
-        nombreCliente = parameters.get("Clientes")
-        tipoInformacion = parameters.get("detalle_de_servicios_gestionados")
-        worksheet = "gestionados"
-        dato = leeExcel(tipoInformacion,nombreCliente,worksheet)
-        status = post_message_markDown(roomId, bot_token, dato)
-
     elif req.get("result").get("action") == "estadisticas":
         result = req.get("result")
         parameters = result.get("parameters")
@@ -128,16 +116,17 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, dato_markdown)
 
     elif req.get("result").get("action") == "Inventario":
-        dato = leeInventario(req)
+        result = req.get("result")
+        parameters = result.get("parameters")
+        numeroSerie = parameters.get("NumeroSerie")
+        InformacionEquipo = parameters.get("InformacionEquipo")
+        worksheet = "Inventario"
+        dato = leeExcel(numeroSerie,InformacionEquipo, worksheet)
+        status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Ayuda":
         texto = help_definition()
         status = post_message_markDown(roomId, bot_token,texto)
-
-    elif req.get("result").get("action") == "InformacionSala":
-        dato = get_room_sessions_id(req,bot_token,moderator_token)
-        status = post_message(dato, bot_token, "probando")
-        print (status)
 
     else:
         return {}
@@ -290,113 +279,6 @@ def leeExcel(datoFila, datoColumna, worksheet):
     return valorBuscado
 
 
-def leeInventario(req):
-    datos_inventario = parameters.get("datos_inventario")
-
-
-
-
-######################################################################################################################
-#  Funciones sobre salas de Spark
-#  -  Conseguir identificadores de sala
-#  -  Leer mensajes de las salas
-#  -  ...
-######################################################################################################################
-
-
-# El objetivo de esta función es asociar el número de la sesión que nos envía api.ai
-# con el identificador de sala de spark (que no envía api.ai)
-# Mapeando el id de la sesión con el id de la sala el envio de mensajes a la sala
-# puede ser directo y más eficiente.
-def get_room_sessions_id(req,bot_token,moderator_token):
-
-    sessionId = req.get("sessionId")
-
-    for c in range(len(labels)):
-       if (labels[c][0] == sessionId):
-          print("ya dispongo del identificador de la sala, lo envio...")
-          return labels[c][1]
-
-    else:
-        roomId = informacionSala(req,bot_token,moderator_token)
-        labels.append([sessionId,roomId])
-        print("Anadiendo un nuevo identificador de sesion: ", sessionId, "-> con roomId: ",roomId)
-        return roomId
-
-def informacionSala(req,bot_token,moderator_token):
-
-    identificador_sala = get_bot_room_id(req,bot_token,moderator_token)
-    print ("el identificador de esta sala es: ", identificador_sala)
-    return identificador_sala
-
-
-def get_bot_room_id(req,bot_token,moderator_token):
-
-    result = req.get("result")
-    ultima_peticion= result.get("resolvedQuery")
-    identificador_sala = get_rooms(ultima_peticion,bot_token,moderator_token)
-
-    return identificador_sala
-
-def get_rooms(ultima_peticion,bot_token,moderator_token):
-
-    header = {'Authorization': "Bearer "+ bot_token, 'content-type': 'application/json'}
-
-    result = requests.get(url='https://api.ciscospark.com/v1/rooms', headers=header)
-
-    JSONresponse = result.json()
-    roomlist_array = []
-
-    for EachRoom in JSONresponse['items']:
-        roomlist_array.append(EachRoom.get('title') + ' ** ' + EachRoom.get('id'))
-        last_message = get_last_message(EachRoom.get('id'),bot_token,moderator_token)
-        print("Last Message:", last_message)
-
-        if (last_message.__contains__(ultima_peticion)):
-          return EachRoom.get('id')
-
-    return "sala no encontrada"
-    #print("Rooms:", roomlist_array)
-
-def get_last_message(roomid,bot_token,moderator_token):
-
-    num_mensajes = 2
-    header = {'Authorization': "Bearer "+ bot_token, 'content-type': 'application/json'}
-    payload = {'roomId': roomid, 'max': num_mensajes}
-
-    result = requests.get(url='https://api.ciscospark.com/v1/messages', headers=header,params=payload)
-
-    # en caso de fallo en el acceso al último mensaje, es que es una sala grupal, y el bot no tiene permisos para conseguir los mensajes
-    # tendrá que ser un moderador (no un bot) que este presente en la sala grupal para acceder a los mensajes
-    if result.status_code != 200:
-        header = {'Authorization': "Bearer " + moderator_token , 'content-type': 'application/json'}
-        payload = {'roomId': roomid, 'max': num_mensajes}
-
-        result = requests.get(url='https://api.ciscospark.com/v1/messages', headers=header, params=payload)
-
-        # si vuelve a fallar, entonces no podemos conseguir la información y por tanto el id de la sala...
-        if result.status_code != 200:
-           return ""
-
-
-
-    JSONresponse = result.json()
-    messagelist_array = []
-    #print (JSONresponse)
-
-    for EachMessage in JSONresponse['items']:
-       messagelist_array.append(EachMessage.get('text'))
-
-    #print("Messages:",messagelist_array)
-
-    return messagelist_array[0]
-
-def get_session_id(req):
-
-    session_id = req.get("sessionId")
-
-    return session_id
-
 def post_message(roomid,bot_token,text):
 
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
@@ -459,7 +341,8 @@ def get_message(bot_token, id):
 #  Definición de  las opciones de ayuda.
 def help_definition():
 
-    text = "Hola, soy Andy! \nEstos son los temas sobre los que te puedo ayudar: \n 1. **Informes de estadisticas.**\n 2. **Informacion de inventario** \n 3. **Actas de reuniones**\n 4. **Soporte Techno Trends**"
+    text = "Hola, soy Andy! \n Estos son los temas sobre los que te puedo ayudar: \n 1. **Informes de estadisticas.**\n" \
+           " 2. **Informacion de inventario** \n 3. **Actas de reuniones**\n 4. **Soporte Techno Trends**"
 
     return text
 
