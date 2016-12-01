@@ -257,7 +257,7 @@ def leeExcel(datoFila, datoColumna, worksheet):
 
     gc = gspread.authorize(credentials)
 
-    wks = gc.open("prueba1")
+    wks = gc.open("Base de datos")
 
     worksheet = wks.worksheet(worksheet)
 
