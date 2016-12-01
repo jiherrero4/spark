@@ -118,8 +118,8 @@ def processRequestSpark(req, roomId):
     elif req.get("result").get("action") == "Inventario":
         result = req.get("result")
         parameters = result.get("parameters")
-        numeroSerie = parameters.get("NumeroSerie")
-        InformacionEquipo = parameters.get("InformacionEquipo")
+        numeroSerie = parameters.get("Serial_Number")
+        InformacionEquipo = parameters.get("datos_inventario")
         worksheet = "Inventario"
         dato = leeExcel(numeroSerie,InformacionEquipo, worksheet)
         status = post_message_markDown(roomId, bot_token, dato)
