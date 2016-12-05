@@ -135,6 +135,10 @@ def processRequestSpark(req, roomId):
         texto = help_ayuda_informe()
         status = post_message_markDown(roomId, bot_token,texto)
 
+    elif req.get("result").get("action") == "ayuda_inventario":
+        texto = help_ayuda_inventario()
+        status = post_message_markDown(roomId, bot_token,texto)
+
     else:
         return {}
 
@@ -356,6 +360,13 @@ def help_definition():
 def help_ayuda_informe():
 
     text = "Puedes pedirme el informe del servicio de cualquier mes, ejemplo: *muestrame el informe de Enero*"
+
+    return text
+
+def help_ayuda_inventario():
+
+    text = "Esta es la información sobre la que te puedo ayudar del inventario:\n 1. **Modelo de equipo.**\n" \
+           " 2. **Ubicación**\n 3. **Nombre del equipo**\n 4. **IP del equipo**"
 
     return text
 
