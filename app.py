@@ -125,14 +125,14 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Ayuda":
-        result = req.get("result")
-        fulfill = result.get("fulfillment")
-        speech = fulfill.get("speech")
-        #texto = help_definition()
-        status = post_message_markDown(roomId, bot_token,speech)
+        #result = req.get("result")
+        #fulfill = result.get("fulfillment")
+        #speech = fulfill.get("speech")
+        texto = help_definition()
+        status = post_message_markDown(roomId, bot_token,texto)
 
     elif req.get("result").get("action") == "ayuda_informe":
-        texto = help_definition()
+        texto = help_ayuda_informe()
         status = post_message_markDown(roomId, bot_token,texto)
 
     else:
@@ -353,6 +353,11 @@ def help_definition():
 
     return text
 
+def help_ayuda_informe():
+
+    text = "Puedes pedirme el informe del servicio de cualquier mes, ejemplo: *muestrame el informe de Enero*"
+
+    return text
 
 def makeWebhookResult(data):
     # print ("preparando el mensaje de vuelta")
