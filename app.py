@@ -78,7 +78,7 @@ def webhookSpark():
       message = get_message(bot_token, id)
       text = message.get("text")
       print("Text: ", text)
-      response = api_ai_request(text)
+      response = api_ai_request(text,roomId)
       #print("Response:",json.dumps(response, indent=4))
       #fulfillment = response.get("fulfillment")
       result = response.get("result")
@@ -150,7 +150,7 @@ def processRequestSpark(req, roomId):
 #  -  ...
 ######################################################################################################################
 
-def api_ai_request(query_from_spark):
+def api_ai_request(query_from_spark, roomId):
 
     ai = apiai.ApiAI(api_ai_token)
 
@@ -158,7 +158,7 @@ def api_ai_request(query_from_spark):
 
     request.lang = 'es'  # optional, default value equal 'en'
 
-    # request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
+    request.session_id = roomId
 
     request.query = query_from_spark
 
