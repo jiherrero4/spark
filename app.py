@@ -125,8 +125,9 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Ayuda":
-        texto = help_definition()
-        status = post_message_markDown(roomId, bot_token,texto)
+        speech = req.get("fulfillment").get("speech")
+        #texto = help_definition()
+        status = post_message_markDown(roomId, bot_token,speech)
 
     else:
         return {}
