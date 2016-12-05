@@ -125,11 +125,11 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Ayuda":
-        result = req.get("result")
-        fulfill = result.get("fulfillment")
-        speech = fulfill.get("speech")
-        #texto = help_definition()
-        status = post_message_markDown(roomId, bot_token,speech)
+        #result = req.get("result")
+        #fulfill = result.get("fulfillment")
+        #speech = fulfill.get("speech")
+        texto = help_definition()
+        status = post_message_markDown(roomId, bot_token,texto)
 
     else:
         return {}
@@ -344,7 +344,7 @@ def get_message(bot_token, id):
 #  Definición de  las opciones de ayuda.
 def help_definition():
 
-    text = "Hola, soy Andy! \n Estos son los temas sobre los que te puedo ayudar: \n 1. **Informes de estadisticas.**\n" \
+    text = "Hola, soy Andy \n Estos son los temas sobre los que te puedo ayudar \n 1. **Informes de estadisticas.**\n" \
            " 2. **Informacion de inventario** \n 3. **Actas de reuniones**\n 4. **Soporte Techno Trends**"
 
     return text
