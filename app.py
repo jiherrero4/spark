@@ -348,8 +348,8 @@ def get_message(bot_token, id):
 #  Definición de  las opciones de ayuda.
 def help_definition():
 
-    text = "Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción): 1. **Informes de estadisticas.**" \
-           " 2. **Informacion de inventario** \n 3. **Actas de reuniones** 4. **Soporte Techno Trends**"
+    text = "Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción):\n 1. **Informes de estadisticas.**\n" \
+           " 2. **Informacion de inventario**\n 3. **Actas de reuniones**\n 4. **Soporte Techno Trends**"
 
     return text
 
