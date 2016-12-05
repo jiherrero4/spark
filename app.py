@@ -158,7 +158,7 @@ def api_ai_request(query_from_spark, roomId):
 
     request.lang = 'es'  # optional, default value equal 'en'
 
-    request.session_id = roomId
+    request.session_id = roomId[-20:]
 
     request.query = query_from_spark
 
