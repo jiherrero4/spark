@@ -316,6 +316,7 @@ def post_message_markDown(roomid,bot_token,markdown):
 
     print("RoomId:", roomid)
     print("Bottoken: ", bot_token)
+    print("Texto a mostrar:", markdown)
 
     result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, json=payload)
 
