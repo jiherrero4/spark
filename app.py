@@ -313,9 +313,8 @@ def post_message_markDown(roomid,bot_token,markdown):
 
     print("RoomId:", roomid)
     print("Bottoken: ", bot_token)
-    print("Texto a mostrar:", markdown)
-
-    texto = markdown.replace('\\n', '\n')
+    print("JSON a mostrar :", markdown)
+    print("Texto a mostrar :", json.dumps(markdown,encoding="utf-8"))
 
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
     payload = {'roomId': roomid, 'markdown': texto}
