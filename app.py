@@ -125,11 +125,11 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, dato)
 
     elif req.get("result").get("action") == "Ayuda":
-        #result = req.get("result")
-        #fulfill = result.get("fulfillment")
-        #speech = fulfill.get("speech")
-        texto = help_definition()
-        status = post_message_markDown(roomId, bot_token,texto)
+        result = req.get("result")
+        fulfill = result.get("fulfillment")
+        texto = fulfill.get("speech")
+        #texto = help_definition()
+        status = post_message_markDown(roomId, bot_token,json.dumps(texto))
 
     elif req.get("result").get("action") == "ayuda_informe":
         texto = help_ayuda_informe()
