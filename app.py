@@ -316,8 +316,13 @@ def post_message_markDown(roomid,bot_token,markdown):
     print("JSON a mostrar :", markdown)
     print("Texto a mostrar :", json.dumps(markdown,ensure_ascii=False, encoding="utf-8"))
 
+    texto = json.dumps(markdown,ensure_ascii=False, encoding="utf-8")
+
+    texto2 = texto.replace('\\\\n','\n')
+    print("Texto en string:", texto2)
+
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
-    payload = {'roomId': roomid, 'markdown':markdown}
+    payload = {'roomId': roomid, 'markdown':texto2}
 
 
     result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, json=payload)
