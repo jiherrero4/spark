@@ -323,7 +323,7 @@ def post_message_markDown(roomid,bot_token,markdown):
 
     texto3 = "texto en dos \n lineas"
 
-    texto4 ="Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción):\n 1. **Informes de estadisticas. \n 2. **Otros informes**"
+    texto4 ="Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción):   1. **Informes de estadisticas**.    2. **Otros informes**"
 
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
     payload = {'roomId': roomid, 'markdown':texto4}
