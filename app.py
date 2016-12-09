@@ -326,7 +326,7 @@ def post_message_markDown(roomid,bot_token,markdown):
     texto4 ="Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción):   1. **Informes de estadisticas**.    2. **Otros informes**"
 
     header = {'Authorization': "Bearer " + bot_token, 'content-type': 'application/json'}
-    payload = {'roomId': roomid, 'markdown':texto4}
+    payload = {'roomId': roomid, 'markdown':texto2}
 
 
     result = requests.post(url='https://api.ciscospark.com/v1/messages', headers=header, json=payload)
