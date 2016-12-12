@@ -162,8 +162,8 @@ def processRequestSpark(req, roomId):
         status = post_message_markDown(roomId, bot_token, texto)
         return {}
 
-    res = makeWebhookResult(dato)
-    return res
+
+    return {}
 
 
 ######################################################################################################################
@@ -260,23 +260,6 @@ def get_message(bot_token, id):
     print(JSONresponse)
     return JSONresponse
 
-
-def makeWebhookResult(data):
-    # print ("preparando el mensaje de vuelta")
-
-    if data is None or data == "":
-        speech = "no he encontrado lo que me pides, por favor especifica mas tu peticion..."
-    else:
-        speech = data
-
-    print("Response:")
-    print(speech)
-
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "source": "from spark"
-    }
 
 
 if __name__ == '__main__':
