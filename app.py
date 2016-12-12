@@ -37,14 +37,9 @@ logging.basicConfig(level=logging.DEBUG)
 #
 app = Flask(__name__)
 
-# Utilizamos labels para guardar el identificador de la sala de spark de casa sesión
-# Sino lo sabemos vamos a buscarlo..
-labels = [["f0b38c60-9a87-11e6-9343-85f91990429b",
-               "Y2lzY29zcGFyazovL3VzL1JPT00vM2I5OGI5NTMtMGQyNC0zZDY5LWIyNTMtNzkxNzljOWZkNTVj"]]
 
 bot_email = "Trends2@sparkbot.io"
 bot_token = "MDc0OWJkYjgtZWM4Yy00MzgyLThmNDAtNzQ2ZDliMmE1Y2VkMmE5ODM3OWQtMDQ1"
-moderator_token = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
 api_ai_token = "594cb32ae50447938756853f36492b67"
 
 
@@ -88,64 +83,6 @@ def webhookSpark():
 
 
     return "OK"
-######################################################################################################################
-#  Procesamiento de peticiones:
-#  -  Desde Api.ai
-#  -  Desde una sala de Spark
-#  -  ...
-######################################################################################################################
-def processRequestSpark(req, roomId):
-    dato = ""
-    # Datos de Acceso del Bot: Token del BOT
-
-
-    if req.get("result").get("action") == "creaSala":
-        creaSalaSpark(moderator_token)
-
-    elif req.get("result").get("action") == "creaGrupo":
-        creaGrupoSpark()
-
-    elif req.get("result").get("action") == "estadisticas":
-        result = req.get("result")
-        parameters = result.get("parameters")
-        mes = parameters.get("meses")
-        tipoInforme = "informe estadisticas"
-        worksheet = "Informes"
-        dato = leeExcel(mes,tipoInforme, worksheet)
-        dato_markdown = "[informe](" + dato + ")"
-        status = post_message_markDown(roomId, bot_token, dato_markdown)
-
-    elif req.get("result").get("action") == "Inventario":
-        result = req.get("result")
-        parameters = result.get("parameters")
-        numeroSerie = parameters.get("Serial_Number")
-        InformacionEquipo = parameters.get("datos_inventario")
-        worksheet = "Inventario"
-        dato = leeExcel(numeroSerie,InformacionEquipo, worksheet)
-        status = post_message_markDown(roomId, bot_token, dato)
-
-    elif req.get("result").get("action") == "Ayuda":
-        result = req.get("result")
-        fulfill = result.get("fulfillment")
-        texto = fulfill.get("speech")
-        #texto = help_definition()
-        status = post_message_markDown(roomId, bot_token,texto)
-
-    elif req.get("result").get("action") == "ayuda_informe":
-        texto = help_ayuda_informe()
-        status = post_message_markDown(roomId, bot_token,texto)
-
-    elif req.get("result").get("action") == "ayuda_inventario":
-        texto = help_ayuda_inventario()
-        status = post_message_markDown(roomId, bot_token,texto)
-
-    else:
-        return {}
-
-    res = makeWebhookResult(dato)
-    return res
-
-#
 
 ######################################################################################################################
 #  Natural Language:
@@ -183,78 +120,58 @@ def api_ai_request(query_from_spark, roomId):
         return "Error"
 
 
-
 ######################################################################################################################
-#  Acciones desencadenadas de las peticiones de los clientes
-#  -  Crear una sala.
-#  -  Conseguir información de una base de datos.
-#  -  Mostrar las opciones del asistente.
+#  Procesamiento de peticiones:
+#  -  Desde Api.ai
+#  -  Desde una sala de Spark
 #  -  ...
 ######################################################################################################################
+def processRequestSpark(req, roomId):
+    dato = ""
+    # Datos de Acceso del Bot: Token del BOT
+
+    if req.get("result").get("action") == "estadisticas":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        mes = parameters.get("meses")
+        tipoInforme = "informe estadisticas"
+        worksheet = "Informes"
+        dato = leeExcel(mes,tipoInforme, worksheet)
+        dato_markdown = "[informe](" + dato + ")"
+        status = post_message_markDown(roomId, bot_token, dato_markdown)
+
+    elif req.get("result").get("action") == "Inventario":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        numeroSerie = parameters.get("Serial_Number")
+        InformacionEquipo = parameters.get("datos_inventario")
+        worksheet = "Inventario"
+        dato = leeExcel(numeroSerie,InformacionEquipo, worksheet)
+        status = post_message_markDown(roomId, bot_token, dato)
+
+    elif req.get("result").get("action") == "Ayuda":
+        result = req.get("result")
+        fulfill = result.get("fulfillment")
+        texto = fulfill.get("speech")
+        status = post_message_markDown(roomId, bot_token,texto)
+
+    else:
+        result = req.get("result")
+        fulfill = result.get("fulfillment")
+        texto = fulfill.get("speech")
+        status = post_message_markDown(roomId, bot_token, texto)
+        return {}
+
+    res = makeWebhookResult(dato)
+    return res
 
 
-def creaSalaSpark(myToken):
-    print("funcion creaSalaSpark iniciado")
-    roomTitle = "PruebaCreacionSala"
-    headers = {"Authorization": "Bearer " + myToken, "Content-type": "application/json"}
-    # Define the action to be taken in the HTTP request
-    roomInfo = {"title": roomTitle}
-    # Execute HTTP POST request to create the Spark Room
-    r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
-
-    print("funcion creaSalaSpark completado")
-
-    room = r.json()
-
-
-def creaGrupoSpark():
-    print("funcion creaGrupoSpark iniciado")
-    myToken = "YjI2NDhkMTYtYjkxMS00ZGYwLWIxNjQtYzQyYTIwOTVhNWI3NDU0YmY2OTYtZjYx"
-
-    # emailFile = userlist.txt
-    roomTitle = "Ojete"  # second argument
-    # Read the email file and save the emails in an list
-    # emails = [line.strip() for line in open(emailFile)]
-    emails = ["jiherrero@ttrends.es", "fsobrino@ttrends.es", "pmartin@ttrends.es", "jespejo@ttrends.es",
-              "jmvarelad@gmail.com"]
-
-    print("funcion creaGrupoSpark, paso2")
-
-    # Define header used for authentication
-    headers = {"Authorization": "Bearer " + myToken,
-               "Content-type": "application/json"}
-
-    # Define the action to be taken in the HTTP request
-    roomInfo = {"title": roomTitle}
-
-    # Execute HTTP POST request to create the Spark Room
-    r = requests.post("https://api.ciscospark.com/v1/rooms", headers=headers, json=roomInfo)
-    room = r.json()
-    # Print the result of the HTTP POST request
-    print(room)
-
-    for email in emails:
-        # if it's an blank line don't add:
-        if email == "": continue
-        # Set the HTTP request payload (action)
-        membershipInfo = {"roomId": room["id"],
-                          "personEmail": email}
-        # Execute HTTP POST request to create the Spark Room
-        r = requests.post("https://api.ciscospark.com/v1/memberships",
-                          headers=headers, json=membershipInfo)
-        membership = r.json()
-        print(membership)
-        print()
-
-
-def llamaSala():
-    new = 2  # open in a new tab, if possible
-
-    # open a public URL, in this case, the webbrowser docs
-    # url = "http://expansion.es"
-    url = "https://pxdemo.ttrends.es/webapp/#/?conference=jiherrero@ttrends.es"
-    webbrowser.open(url, new=new)
-
+######################################################################################################################
+#  Funciones de la aplicación
+#  -  Leer excel
+#  -  Escribir en una sala
+#  -  ...
+######################################################################################################################
 
 # Lee informacion de un archivo google sheet en la nube
 def leeExcel(datoFila, datoColumna, worksheet):
@@ -343,34 +260,6 @@ def get_message(bot_token, id):
     print(JSONresponse)
     return JSONresponse
 
-
-
-######################################################################################################################
-#  Definicion de opciones y dialogos con los clientes
-#  - Mensaje de ayuda
-#  - Mensaje por defecto en caso de no encontrar la respuesta.
-######################################################################################################################
-
-#  Definición de  las opciones de ayuda.
-def help_definition():
-
-    text = "Hola, soy Andy. Estos son los temas sobre los que te puedo ayudar (teclea una opción):\n 1. **Informes de estadisticas.**\n" \
-           " 2. **Informacion de inventario**\n 3. **Actas de reuniones**\n 4. **Soporte Techno Trends**"
-
-    return text
-
-def help_ayuda_informe():
-
-    text = "Puedes pedirme el informe del servicio de cualquier mes, ejemplo: *muestrame el informe de Enero*"
-
-    return text
-
-def help_ayuda_inventario():
-
-    text = "Esta es la información sobre la que te puedo ayudar del inventario:\n 1. **Modelo de equipo.**\n" \
-           " 2. **Ubicación**\n 3. **Nombre del equipo**\n 4. **IP del equipo**"
-
-    return text
 
 def makeWebhookResult(data):
     # print ("preparando el mensaje de vuelta")
