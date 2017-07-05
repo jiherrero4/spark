@@ -181,7 +181,7 @@ def leeExcel(datoFila, datoColumna, worksheet):
 
     scope = ['https://spreadsheets.google.com/feeds']
 
-    credentials = ServiceAccountCredentials.from_json_keyfile_name('My Project 1-48e0f0c4d0cc', scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name('My Project 1-48e0f0c4d0cc.json', scope)
 
     gc = gspread.authorize(credentials)
 
